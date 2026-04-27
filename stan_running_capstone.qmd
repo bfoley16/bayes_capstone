@@ -1,0 +1,79 @@
+---
+title: "PC Priors"
+format: html
+---
+
+```{r load-packages,message=FALSE,warning=FALSE}
+library(tidyverse)
+library(bayesrules)
+library(rstan)
+```
+
+```{r load-data}
+data("basketball")
+```
+
+```{r cleaning}
+clean_basketball <- basketball %>%
+  group_by(player_name) %>%
+  filter((team == "TOT"|n() ==1) & games_played >= 11)
+```
+
+```{r pc-prior}
+basketball_data_pc <- list(N = nrow(clean_basketball),
+                        x = clean_basketball$avg_points,
+                        mu = rep(0,nrow(clean_basketball)),
+                        R = diag(nrow(clean_basketball)),
+                        U = 0.968,
+                        alpha = 0.01)
+
+basketball_pc_fit <- stan(file = "basketball_PC.stan",
+                          data = basketball_data,
+                          chains = 4,
+                          warmup = 1000,
+                          iter = 2000)
+```
+
+```{r gamma-prior}
+basketball_data_gamma <- list(N = nrow(clean_basketball),
+                        x = clean_basketball$avg_points,
+                        mu = rep(0,nrow(clean_basketball)),
+                        R = diag(nrow(clean_basketball)),
+                        a = 2,
+                        b = 2)
+
+basketball_gamma_fit <- stan(file = "basketball_gamma.stan",
+                             data = basketball_data_gamma,
+                             chains = 4,
+                             warmup = 1000,
+                             iter = 2000)
+```
+
+
+
+```{r}
+print(basketball_pc_fit)
+print(basketball_gamma_fit)
+```
+
+
+```{r}
+library(bayesplot)
+
+pp_mat_complete_pc <- extract(basketball_pc_fit, pars = "x_pred")[[1]]
+
+ppc_dens_overlay(log(basketball_data_pc$x) - mean(log(basketball_data_pc$x)), pp_mat_complete_pc[1:50,]) +
+  theme_classic()
+
+ppc_intervals(log(basketball_data_pc$x) - mean(log(basketball_data_pc$x)), yrep = pp_mat_complete_pc[1:50, ], prob = 0.5, prob_outer = 0.95) +
+  theme_classic()
+
+pp_mat_complete_gamma <- extract(basketball_gamma_fit, pars = "x_pred")[[1]]
+
+ppc_dens_overlay(log(basketball_data_gamma$x) - mean(log(basketball_data_gamma$x)), pp_mat_complete_gamma[1:50,]) +
+  theme_classic()
+
+ppc_intervals(log(basketball_data_gamma$x) - mean(log(basketball_data_gamma$x)), yrep = pp_mat_complete_gamma[1:50, ], prob = 0.5, prob_outer = 0.95) +
+  theme_classic()
+```
+
