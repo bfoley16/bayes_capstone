@@ -63,17 +63,21 @@ library(bayesplot)
 pp_mat_complete_pc <- extract(basketball_pc_fit, pars = "x_pred")[[1]]
 
 ppc_dens_overlay(log(basketball_data_pc$x) - mean(log(basketball_data_pc$x)), pp_mat_complete_pc[1:50,]) +
-  theme_classic()
+  theme_classic() +
+  labs(title = "PC Prior")
 
 ppc_intervals(log(basketball_data_pc$x) - mean(log(basketball_data_pc$x)), yrep = pp_mat_complete_pc[1:50, ], prob = 0.5, prob_outer = 0.95) +
-  theme_classic()
+  theme_classic() +
+  labs(title = "PC Prior")
 
 pp_mat_complete_gamma <- extract(basketball_gamma_fit, pars = "x_pred")[[1]]
 
 ppc_dens_overlay(log(basketball_data_gamma$x) - mean(log(basketball_data_gamma$x)), pp_mat_complete_gamma[1:50,]) +
-  theme_classic()
+  theme_classic() +
+  labs(title = "Gamma Prior")
 
 ppc_intervals(log(basketball_data_gamma$x) - mean(log(basketball_data_gamma$x)), yrep = pp_mat_complete_gamma[1:50, ], prob = 0.5, prob_outer = 0.95) +
-  theme_classic()
+  theme_classic() + 
+  labs(title = "Gamma Prior")
 ```
 
