@@ -70,9 +70,13 @@ ppc_dens_overlay(log(basketball_data_pc$x) - mean(log(basketball_data_pc$x)), pp
   theme_classic() +
   labs(title = "PC Prior")
 
+ggsave("pc_density.png")
+
 ppc_intervals(log(basketball_data_pc$x) - mean(log(basketball_data_pc$x)), yrep = pp_mat_complete_pc[1:50, ], prob = 0.5, prob_outer = 0.95) +
   theme_classic() +
   labs(title = "PC Prior")
+
+ggsave("pc_lines.png")
 
 pp_mat_complete_gamma <- extract(basketball_gamma_fit, pars = "x_pred")[[1]]
 
@@ -80,9 +84,13 @@ ppc_dens_overlay(log(basketball_data_gamma$x) - mean(log(basketball_data_gamma$x
   theme_classic() +
   labs(title = "Gamma Prior")
 
+ggsave("gamma_density.png")
+
 ppc_intervals(log(basketball_data_gamma$x) - mean(log(basketball_data_gamma$x)), yrep = pp_mat_complete_gamma[1:50, ], prob = 0.5, prob_outer = 0.95) +
   theme_classic() + 
   labs(title = "Gamma Prior")
+
+ggsave("gamma_lines.png")
 ```
 
 ```{r}
@@ -137,9 +145,7 @@ ppc_dens_overlay(log(basketball_data_pc_small$x) - mean(log(basketball_data_pc_s
   theme_classic() +
   labs(title = "PC Prior")
 
-ppc_intervals(log(basketball_data_pc_small$x) - mean(log(basketball_data_pc_small$x)), yrep = pp_mat_complete_pc_small[1:50, ], prob = 0.5, prob_outer = 0.95) +
-  theme_classic() +
-  labs(title = "PC Prior")
+ggsave("pc_density_small.png")
 
 pp_mat_complete_gamma_small <- extract(basketball_gamma_fit_small, pars = "x_pred")[[1]]
 
@@ -147,9 +153,7 @@ ppc_dens_overlay(log(basketball_data_gamma_small$x) - mean(log(basketball_data_g
   theme_classic() +
   labs(title = "Gamma Prior")
 
-ppc_intervals(log(basketball_data_gamma_small$x) - mean(log(basketball_data_gamma_small$x)), yrep = pp_mat_complete_gamma_small[1:50, ], prob = 0.5, prob_outer = 0.95) +
-  theme_classic() + 
-  labs(title = "Gamma Prior")
+ggsave("gamma_density_small.png")
 ```
 
 
